@@ -55,6 +55,8 @@ public class EnemyFire : MonoBehaviour
         _audio = GetComponent<AudioSource>();
 
         wsReload = new WaitForSeconds(reloadTime);
+        //MuzzleFlash 활성화
+        muzzleFlash.enabled = false;
     }
 
     // Update is called once per frame

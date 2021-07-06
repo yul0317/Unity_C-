@@ -42,7 +42,9 @@ public class EnemyAI : MonoBehaviour
     private readonly int hashSpeed = Animator.StringToHash("Speed");
     private readonly int hashDie = Animator.StringToHash("Die");
     private readonly int hashDieIdx = Animator.StringToHash("DieIdx");
-
+    private readonly int hashOffset = Animator.StringToHash("Offset");
+    private readonly int hashWalkSpeed = Animator.StringToHash("WalkSpeed");
+    private readonly int hashPlayerDie = Animator.StringToHash("PlayerDie");
     void Awake()
     {
         //주인공 게임오브젝트 추출
@@ -64,6 +66,11 @@ public class EnemyAI : MonoBehaviour
 
         //코루틴의 지연시간 생성
         ws = new WaitForSeconds(0.3f);
+
+        //Cycle Offset 값을 불규칙하게 변경
+        animator.SetFloat(hashOffset, Random.Range(0.0f, 1.0f));
+        //Speed 값을 불규칙하게 변경
+        animator.SetFloat(hashWalkSpeed, Random.Range(1.0f, 1.2f));
     }
 
     void OnEnable()
@@ -72,6 +79,13 @@ public class EnemyAI : MonoBehaviour
         StartCoroutine(CheckState());
         //Action 코루틴 함수 실행
         StartCoroutine(Action());
+
+        Damage.OnPlayerDie += this.OnPlayerDie;
+    }
+
+    void OnDisable()
+    {
+        Damage.OnPlayerDie -= this.OnPlayerDie;
     }
 
     //적 캐릭터의 상태를 검사하는 코루틴 함수
@@ -141,6 +155,7 @@ public class EnemyAI : MonoBehaviour
                     }
                     break;
                 case State.DIE:
+                    this.gameObject.tag = "Untagged";
                     isDie = true;
                     enemyFire.isFire = false;
                     //순찰 및 추적을 정지
@@ -166,5 +181,14 @@ public class EnemyAI : MonoBehaviour
     {
         //Speed 파라미터에 이동 속도를 전달
         animator.SetFloat(hashSpeed, moveAgent.speed);
+    }
+    public void OnPlayerDie()
+    {
+        moveAgent.Stop();
+        enemyFire.isFire = false;
+        //모든 코루틴 함수를 종료시킴
+        StopAllCoroutines();
+
+        animator.SetTrigger(hashPlayerDie);
     }
 }

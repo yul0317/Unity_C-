@@ -4,106 +4,114 @@ using UnityEngine;
 
 public class BarrelCtrl : MonoBehaviour
 {
-    //Æø¹ß È¿°ú ÇÁ¸®ÆÕÀ» ÀúÀåÇÒ º¯¼ö
+    //í­ë°œ íš¨ê³¼ í”„ë¦¬íŒ¹ì„ ì €ì¥í•  ë³€ìˆ˜
     public GameObject expEffect;
-    //Âî±×·¯Áø µå·³ÅëÀÇ ¸Ş½¬¸¦ ÀúÀåÇÒ ¹è¿­
+    //ì°Œê·¸ëŸ¬ì§„ ë“œëŸ¼í†µì˜ ë©”ì‰¬ë¥¼ ì €ì¥í•  ë°°ì—´
     public Mesh[] meshes;
-    //µå·³ÅëÀÇ ÅØ½ºÃ³¸¦ ÀúÀåÇÒ ¹è¿­
+    //ë“œëŸ¼í†µì˜ í…ìŠ¤ì²˜ë¥¼ ì €ì¥í•  ë°°ì—´
     public Texture[] textures;
 
-    //ÃÑ¾ËÀÌ ¸ÂÀº È½¼ö
+    //ì´ì•Œì´ ë§ì€ íšŸìˆ˜
     private int hitCount = 0;
 
-    //Rigibody ÄÄÆ÷³ÍÆ®¸¦ ÀúÀåÇÒ º¯¼ö
+    //Rigibody ì»´í¬ë„ŒíŠ¸ë¥¼ ì €ì¥í•  ë³€ìˆ˜
     //private Rigidbody rb;
 
-    //MeshFilter ÄÄÆ÷³ÍÆ®¸¦ ÀúÀåÇÒ º¯¼ö
+    //MeshFilter ì»´í¬ë„ŒíŠ¸ë¥¼ ì €ì¥í•  ë³€ìˆ˜
     private MeshFilter meshFilter;
-    //meshFilterCollider ÄÄÆ÷³ÍÆ®¸¦ ÀúÀåÇÒ º¯¼ö
+    //meshFilterCollider ì»´í¬ë„ŒíŠ¸ë¥¼ ì €ì¥í•  ë³€ìˆ˜
     private MeshCollider meshFilterCollider;
-    //MeshRenderer ÄÄÆ÷³ÍÆ®¸¦ ÀúÀåÇÒ º¯¼ö
+    //MeshRenderer ì»´í¬ë„ŒíŠ¸ë¥¼ ì €ì¥í•  ë³€ìˆ˜
     private MeshRenderer _renderer;
-    //AudioSource ÄÄÆ÷³ÍÆ®¸¦ ÀúÀåÇÒ º¯¼ö
+    //AudioSource ì»´í¬ë„ŒíŠ¸ë¥¼ ì €ì¥í•  ë³€ìˆ˜
     private AudioSource _audio;
 
-    //Æø¹ß ¹İ°æ
+    //í­ë°œ ë°˜ê²½
     public float expRadius = 10.0f;
-    //Æø¹ßÀ½ ¿Àµğ¿À Å¬¸³
+    //í­ë°œìŒ ì˜¤ë””ì˜¤ í´ë¦½
     public AudioClip expSfx;
+
+    //Shake í´ë˜ìŠ¤ë¥¼ ì €ì¥í•  ë³€ìˆ˜
+    public Shake shake;
 
     // Start is called before the first frame update
     void Start()
     {
-        //Rigidbody ÄÄÆ÷³ÍÆ®¸¦ ÃßÃâÇØ ÀúÀå
+        //Rigidbody ì»´í¬ë„ŒíŠ¸ë¥¼ ì¶”ì¶œí•´ ì €ì¥
         //rb = GetComponent<Rigidbody>();
-        //MeshFilter ÄÄÆ÷³ÍÆ®¸¦ ÃßÃâÇØ ÀúÀå
+        //MeshFilter ì»´í¬ë„ŒíŠ¸ë¥¼ ì¶”ì¶œí•´ ì €ì¥
         meshFilter = GetComponent<MeshFilter>();
-        //meshFilterCollider ÄÄÆ÷³ÍÆ®¸¦ ÃßÃâÇØ ÀúÀå
+        //meshFilterCollider ì»´í¬ë„ŒíŠ¸ë¥¼ ì¶”ì¶œí•´ ì €ì¥
         meshFilterCollider = GetComponent<MeshCollider>();
-        //MeshRenderer ÄÄÆ÷³ÍÆ®¸¦ ÃßÃâÇØ ÀúÀå
+        //MeshRenderer ì»´í¬ë„ŒíŠ¸ë¥¼ ì¶”ì¶œí•´ ì €ì¥
         _renderer = GetComponent<MeshRenderer>();
-        //³­¼ö¸¦ ¹ß»ı½ÃÄÑ ºÒ±ÔÄ¢ÀûÀÎ ÅØ½ºÃ³¸¦ Àû¿ë
+        //ë‚œìˆ˜ë¥¼ ë°œìƒì‹œì¼œ ë¶ˆê·œì¹™ì ì¸ í…ìŠ¤ì²˜ë¥¼ ì ìš©
         _renderer.material.mainTexture = textures[Random.Range(0, textures.Length)];
-        //AudioSource ÄÄÆ÷³ÍÆ®¸¦ ÃßÃâÇØ ÀúÀå
+        //AudioSource ì»´í¬ë„ŒíŠ¸ë¥¼ ì¶”ì¶œí•´ ì €ì¥
         _audio = GetComponent<AudioSource>();
+        //ShakeìŠ¤í¬ë¦½íŠ¸ë¥¼ ì¶”ì¶œ
+        shake = GameObject.Find("CameraRig").GetComponent<Shake>();
 
     }
-    //Ãæµ¹ÀÌ ¹ß»ıÇßÀ» ¶§ ÇÑ ¹ø È£ÃâµÇ´Â Äİ¹é ÇÔ¼ö
+    //ì¶©ëŒì´ ë°œìƒí–ˆì„ ë•Œ í•œ ë²ˆ í˜¸ì¶œë˜ëŠ” ì½œë°± í•¨ìˆ˜
     void OnCollisionEnter(Collision coll)
     {
-        //Ãæµ¹ÇÑ °ÔÀÓ¿ÀºêÁ§Æ®ÀÇ ÅÂ±×¸¦ ºñ±³
+        //ì¶©ëŒí•œ ê²Œì„ì˜¤ë¸Œì íŠ¸ì˜ íƒœê·¸ë¥¼ ë¹„êµ
         if (coll.collider.CompareTag("BULLET"))
         {
-            //ÃÑ¾ËÀÇ Ãæµ¹ È½¼ö¸¦ Áõ°¡½ÃÅ°°í 3¹ß ÀÌ»ó ¸Â¾Ò´ÂÁö È®ÀÎ
-            if(++hitCount == 5)
+            //ì´ì•Œì˜ ì¶©ëŒ íšŸìˆ˜ë¥¼ ì¦ê°€ì‹œí‚¤ê³  3ë°œ ì´ìƒ ë§ì•˜ëŠ”ì§€ í™•ì¸
+            if (++hitCount == 5)
             {
                 ExpBarrel();
             }
         }
     }
-    //Æø¹ß È¿°ú¸¦ Ã³¸®ÇÒ ÇÔ¼ö
+    //í­ë°œ íš¨ê³¼ë¥¼ ì²˜ë¦¬í•  í•¨ìˆ˜
     void ExpBarrel()
     {
-        //Æø¹ß È¿°ú ÇÁ¸®ÆÕÀ» µ¿ÀûÀ¸·Î »ı¼º
+        //í­ë°œ íš¨ê³¼ í”„ë¦¬íŒ¹ì„ ë™ì ìœ¼ë¡œ ìƒì„±
         GameObject effect = Instantiate(expEffect, transform.position, Quaternion.identity);
         Destroy(effect, 2.0f);
-        //Rigidbody ÄÄÆ÷³ÍÆ®ÀÇ mass¸¦ 1.0À¸·Î ¼öÁ¤ÇØ ¹«°Ô¸¦ °¡º±°Ô ÇÔ
+        //Rigidbody ì»´í¬ë„ŒíŠ¸ì˜ massë¥¼ 1.0ìœ¼ë¡œ ìˆ˜ì •í•´ ë¬´ê²Œë¥¼ ê°€ë³ê²Œ í•¨
         //rb.mass = 1.0f;
-        //À§·Î ¼Ú±¸Ä¡´Â ÈûÀ» °¡ÇÔ
+        //ìœ„ë¡œ ì†Ÿêµ¬ì¹˜ëŠ” í˜ì„ ê°€í•¨
         //rb.AddForce(Vector3.up * 1000.0f);
 
-        //Æø¹ß·Â »ı¼º
+        //í­ë°œë ¥ ìƒì„±
         IndirectDamage(transform.position);
 
-        //³­¼ö¸¦ ¹ß»ı
+        //ë‚œìˆ˜ë¥¼ ë°œìƒ
         int idx = Random.Range(0, meshes.Length);
-        //Âî±×·¯Áø ¸Ş½¬¸¦ Àû¿ë
+        //ì°Œê·¸ëŸ¬ì§„ ë©”ì‰¬ë¥¼ ì ìš©
         meshFilter.sharedMesh = meshes[idx];
-        //Collider ÄÄÆ÷³ÍÆ® º¯°æ
+        //Collider ì»´í¬ë„ŒíŠ¸ ë³€ê²½
         meshFilterCollider.sharedMesh = meshes[idx];
 
-        //Æø¹ßÀ½ »ı¼º
+        //í­ë°œìŒ ìƒì„±
         _audio.PlayOneShot(expSfx, 1.0f);
+
+        //ì…°ì´í¬ íš¨ê³¼ í˜¸ì¶œ
+        StartCoroutine(shake.ShakeCamera(0.1f, 0.2f, 0.5f));
     }
 
-    //Æø¹ß·ÂÀ» ÁÖº¯¿¡ Àü´ŞÇÏ´Â ÇÔ¼ö
+    //í­ë°œë ¥ì„ ì£¼ë³€ì— ì „ë‹¬í•˜ëŠ” í•¨ìˆ˜
     void IndirectDamage(Vector3 pos)
     {
-        //ÁÖº¯¿¡ ÀÖ´Â µå·³ÅëÀ» ¸ğµÎ ÃßÃâ
+        //ì£¼ë³€ì— ìˆëŠ” ë“œëŸ¼í†µì„ ëª¨ë‘ ì¶”ì¶œ
         Collider[] colls = Physics.OverlapSphere(pos, expRadius, 1 << 7);
-        foreach(var coll in colls)
+        foreach (var coll in colls)
         {
-            //Æø¹ß ¹üÀ§¿¡ Æ÷ÇÔµÈ µå·³ÅëÀÇ Rigidbody ÄÄÆ÷³ÍÆ® ÃßÃâ
+            //í­ë°œ ë²”ìœ„ì— í¬í•¨ëœ ë“œëŸ¼í†µì˜ Rigidbody ì»´í¬ë„ŒíŠ¸ ì¶”ì¶œ
             var _rb = coll.GetComponent<Rigidbody>();
-            //µå·³ÅëÀÇ ¹«°Ô¸¦ °¡º±°Ô ÇÔ
+            //ë“œëŸ¼í†µì˜ ë¬´ê²Œë¥¼ ê°€ë³ê²Œ í•¨
             _rb.mass = 1.0f;
-            //Æø¹ß·ÂÀ» Àü´Ş
+            //í­ë°œë ¥ì„ ì „ë‹¬
             _rb.AddExplosionForce(1200.0f, pos, expRadius, 1000.0f);
         }
     }
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

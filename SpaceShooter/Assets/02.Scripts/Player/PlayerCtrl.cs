@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//Å¬·¡½º´Â System.SerializableÀÌ¶ó´Â ¾îÆ®¸®ºäÆ®(Attribute)¸¦ ¸í½ÃÇØ¾ß
-//ÀÎ½ºÆåÅÍ ºä¿¡ ³ëÃâµÊ ³ëÃâÀ» ÇØ¾ß ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ¶û ¿¬°áÀ» ÇÔ. 
-//¿¬°áÇÏ°í ³ª¸éÀº ´Ù½Ã ¼û°ÜÁÜ. ±Ùµ¥ ¼û°ÜÁÖ´Â°Å  animº¯¼ö¸¦ ¼û°ÜÁÜ. ->HideInInspector
+//í´ë˜ìŠ¤ëŠ” System.Serializableì´ë¼ëŠ” ì–´íŠ¸ë¦¬ë·°íŠ¸(Attribute)ë¥¼ ëª…ì‹œí•´ì•¼
+//ì¸ìŠ¤í™í„° ë·°ì— ë…¸ì¶œë¨ ë…¸ì¶œì„ í•´ì•¼ ì• ë‹ˆë©”ì´ì…˜ì´ë‘ ì—°ê²°ì„ í•¨. 
+//ì—°ê²°í•˜ê³  ë‚˜ë©´ì€ ë‹¤ì‹œ ìˆ¨ê²¨ì¤Œ. ê·¼ë° ìˆ¨ê²¨ì£¼ëŠ”ê±°  animë³€ìˆ˜ë¥¼ ìˆ¨ê²¨ì¤Œ. ->HideInInspector
 [System.Serializable]
 public class PlayerAnim
 {
@@ -20,29 +20,39 @@ public class PlayerCtrl : MonoBehaviour
     private float v = 0.0f;
     private float r = 0.0f;
 
-    //Á¢±ÙÇØ¾ß ÇÏ´Â ÄÄÆ÷³ÍÆ®´Â ¹İµå½Ã º¯¼ö¿¡ ÇÒ´çÇÑ ÈÄ »ç¿ë
-    [SerializeField] private Transform tr;  //serial~~ ÀûÀ¸¸é private¶óµµ À¯´ÏÆ¼Ã¢¿¡ Ç¥½ÃµÊ
-    //ÀÌµ¿¼Óµµ º¯¼ö(public À¸·Î ¼±¾ğµÇ¾î Inspector¿¡ ³ëÃâµÊ)
+    //ì ‘ê·¼í•´ì•¼ í•˜ëŠ” ì»´í¬ë„ŒíŠ¸ëŠ” ë°˜ë“œì‹œ ë³€ìˆ˜ì— í• ë‹¹í•œ í›„ ì‚¬ìš©
+    [SerializeField] private Transform tr;  //serial~~ ì ìœ¼ë©´ privateë¼ë„ ìœ ë‹ˆí‹°ì°½ì— í‘œì‹œë¨
+    //ì´ë™ì†ë„ ë³€ìˆ˜(public ìœ¼ë¡œ ì„ ì–¸ë˜ì–´ Inspectorì— ë…¸ì¶œë¨)
     public float moveSpeed = 10.0f;
-    //È¸Àü¼Óµµ º¯¼ö
+    //íšŒì „ì†ë„ ë³€ìˆ˜
     public float rotSpeed = 80.0f;
-    //ÀÎ½ºÆåÅÍ ºä¿¡ Ç¥½ÃÇÒ ¾Ö´Ï¸ŞÀÌ¼Ç Å¬·¡½º º¯¼ö
+    //ì¸ìŠ¤í™í„° ë·°ì— í‘œì‹œí•  ì• ë‹ˆë©”ì´ì…˜ í´ë˜ìŠ¤ ë³€ìˆ˜
     public PlayerAnim playerAnim;
-    //Animation ÄÄÆ÷³ÍÆ®¸¦ ÀúÀåÇÏ±â À§ÇÑ º¯¼ö
+    //Animation ì»´í¬ë„ŒíŠ¸ë¥¼ ì €ì¥í•˜ê¸° ìœ„í•œ ë³€ìˆ˜
     [HideInInspector]
     public Animation anim;
 
-
+    void OnEnable()
+    {
+        GameManager.OnItemChange += UpdateSetup;
+    }
+    void UpdateSetup()
+    {
+        moveSpeed = GameManager.instance.gameData.speed;
+    }
     // Start is called before the first frame update
     void Start()
     {
-        //½ºÅ©¸³Æ®°¡ ½ÇÇàµÈ ÈÄ Ã³À½ ¼öÇàµÇ´Â Start ÇÔ¼ö¿¡¼­ Transform ÄÄÆ÷³ÍÆ®¸¦ ÇÒ´ç
+        //ìŠ¤í¬ë¦½íŠ¸ê°€ ì‹¤í–‰ëœ í›„ ì²˜ìŒ ìˆ˜í–‰ë˜ëŠ” Start í•¨ìˆ˜ì—ì„œ Transform ì»´í¬ë„ŒíŠ¸ë¥¼ í• ë‹¹
         tr = GetComponent<Transform>();
-        //Animation ÄÄÆ÷³ÍÆ®¸¦ º¯¼ö¿¡ ÇÒ´ç
+        //Animation ì»´í¬ë„ŒíŠ¸ë¥¼ ë³€ìˆ˜ì— í• ë‹¹
         anim = GetComponent<Animation>();
-        //Animation ÄÄÆ÷³ÍÆ®ÀÇ ¾Ö´Ï¸ŞÀÌ¼Ç Å¬¸³À» ÁöÁ¤ÇÏ°í ½ÇÇà
+        //Animation ì»´í¬ë„ŒíŠ¸ì˜ ì• ë‹ˆë©”ì´ì…˜ í´ë¦½ì„ ì§€ì •í•˜ê³  ì‹¤í–‰
         anim.clip = playerAnim.idle;
         anim.Play();
+
+        //ë¶ˆëŸ¬ì˜¨ ë°ì´í„° ê°’ì„ moveSpeedì— ì ìš©
+        moveSpeed = GameManager.instance.gameData.speed;
     }
 
     // Update is called once per frame
@@ -55,44 +65,44 @@ public class PlayerCtrl : MonoBehaviour
         Debug.Log("h=" + h.ToString());
         Debug.Log("v=" + v.ToString());
         Debug.Log("r=" + r.ToString());
-        //ÀüÈÄÁÂ¿ì ÀÌµ¿ ¹æÇâ º¤ÅÍ °è»ê
+        //ì „í›„ì¢Œìš° ì´ë™ ë°©í–¥ ë²¡í„° ê³„ì‚°
         Vector3 moveDir = (Vector3.forward * v) + (Vector3.right * h);
 
-        //Translate(ÀÌµ¿ ¹æÇâ * ¼Óµµ * º¯À§°ª(ÀüÁø,ÀüÈÄÁøº¯¼ö)=v(¿©±â¼­´Â) * TimedeltaTime, ±âÁØÁÂÇ¥)
+        //Translate(ì´ë™ ë°©í–¥ * ì†ë„ * ë³€ìœ„ê°’(ì „ì§„,ì „í›„ì§„ë³€ìˆ˜)=v(ì—¬ê¸°ì„œëŠ”) * TimedeltaTime, ê¸°ì¤€ì¢Œí‘œ)
         tr.Translate(moveDir.normalized * moveSpeed * Time.deltaTime, Space.Self);
-        // v¶ó´Â º¯À§°ª »ç¶óÁü. ¿¡ º¤ÅÍ¶ó´Â ÀÚÃ¼°¡ ¹æÇâ¼ºÀ» °¡Áö°í ÀÖ±â¿¡ »ç¶óÁü.
-        // Vector ÀÇ normalized ¼Ó¼ºÀº Á¤±ÔÈ­ ¸¸µé¾îÁÜ. 1.. ÀÎ°¡·Î ¸¸µé¾îÁÜ.
-        //deltaTime¶ó´Â°É °öÇØÁÖ´Â ÀÌÀ¯´Â Time.deltaTime°¡ ÀÌÀü ÇÁ·¹ÀÓ ºÎÅÍ ÇöÀç ÇÁ·¹ÀÓ±îÁö °É¸° ½Ã°£À» ÀÇ¹ÌÇÏ°í
-        // Àú°É °öÇØ¾ß ÇÁ·¹ÀÓ·¹ÀÌÆ®(Frame Rate)¿¡ »ó°ü¾øÀÌ ÁöÁ¤ÇÑ ¼Óµµ·Î ÀÌµ¿ÇÔ.
-        //°öÇØ¾ß ¸Å ÃÊ¸¶´Ù ÁöÁ¤ÇÑ ¼öÄ¡¸¸Å­ ÀÌµ¿ÇÔ ¾È°öÇÏ¸é ¸Å ÇÁ·¹ÀÓ¸¶´Ù ÀÌµ¿ÇØ¹ö¸®±â¶§¹®¿¡ ´Ù¸¥ ÇÁ·¹ÀÓ·¹ÀÌÆ®¿¡¼­´Â Â÷ÀÌ°¡ ³²
+        // vë¼ëŠ” ë³€ìœ„ê°’ ì‚¬ë¼ì§. ì— ë²¡í„°ë¼ëŠ” ìì²´ê°€ ë°©í–¥ì„±ì„ ê°€ì§€ê³  ìˆê¸°ì— ì‚¬ë¼ì§.
+        // Vector ì˜ normalized ì†ì„±ì€ ì •ê·œí™” ë§Œë“¤ì–´ì¤Œ. 1.. ì¸ê°€ë¡œ ë§Œë“¤ì–´ì¤Œ.
+        //deltaTimeë¼ëŠ”ê±¸ ê³±í•´ì£¼ëŠ” ì´ìœ ëŠ” Time.deltaTimeê°€ ì´ì „ í”„ë ˆì„ ë¶€í„° í˜„ì¬ í”„ë ˆì„ê¹Œì§€ ê±¸ë¦° ì‹œê°„ì„ ì˜ë¯¸í•˜ê³ 
+        // ì €ê±¸ ê³±í•´ì•¼ í”„ë ˆì„ë ˆì´íŠ¸(Frame Rate)ì— ìƒê´€ì—†ì´ ì§€ì •í•œ ì†ë„ë¡œ ì´ë™í•¨.
+        //ê³±í•´ì•¼ ë§¤ ì´ˆë§ˆë‹¤ ì§€ì •í•œ ìˆ˜ì¹˜ë§Œí¼ ì´ë™í•¨ ì•ˆê³±í•˜ë©´ ë§¤ í”„ë ˆì„ë§ˆë‹¤ ì´ë™í•´ë²„ë¦¬ê¸°ë•Œë¬¸ì— ë‹¤ë¥¸ í”„ë ˆì„ë ˆì´íŠ¸ì—ì„œëŠ” ì°¨ì´ê°€ ë‚¨
 
-        //Vector3.up ÃàÀ» ±âÁØÀ¸·Î rotSpeed¸¸Å­ÀÇ ¼Óµµ·Î È¸Àü
-        // È¸ÀüÇÒ ±âÁØÁÂÇ¥Ãà  * Time.deltaTime * È¸Àü¼Óµµ * º¯À§ÀÔ·Â°ª
+        //Vector3.up ì¶•ì„ ê¸°ì¤€ìœ¼ë¡œ rotSpeedë§Œí¼ì˜ ì†ë„ë¡œ íšŒì „
+        // íšŒì „í•  ê¸°ì¤€ì¢Œí‘œì¶•  * Time.deltaTime * íšŒì „ì†ë„ * ë³€ìœ„ì…ë ¥ê°’
         tr.Rotate(Vector3.up * rotSpeed * Time.deltaTime * r);
 
-        //Å°º¸µå ÀÔ·Â°ªÀ» ±âÁØÀ¸·Î µ¿ÀÛÇÒ ¾Ö´Ï¸ŞÀÌ¼Ç ¼öÇà
+        //í‚¤ë³´ë“œ ì…ë ¥ê°’ì„ ê¸°ì¤€ìœ¼ë¡œ ë™ì‘í•  ì• ë‹ˆë©”ì´ì…˜ ìˆ˜í–‰
         if (v >= 0.1f)
         {
-            anim.CrossFade(playerAnim.runF.name, 0.3f);//ÀüÁø ¾Ö´Ï¸ŞÀÌ¼Ç
-            //¾Ö´Ï¸ŞÀÌ¼Ç ½ÇÇàÇÏ´Â CrossFade ÇÔ¼ö
-            // ¸Å°³º¯¼ö 1 : º¯°æÇÒ ¾Ö´Ï¸ŞÀÌ¼Ç Å¬¸³ÀÇ ¸íÄª
-            // ¸Å°³º¯¼ö 2 : ´Ù¸¥ ¾Ö´Ï¸ŞÀÌ¼Ç Å¬¸³À¸·Î ÆäÀÌµå¾Æ¿ôµÇ´Â ½Ã°£À» ÀÇ¹Ì
+            anim.CrossFade(playerAnim.runF.name, 0.3f);//ì „ì§„ ì• ë‹ˆë©”ì´ì…˜
+            //ì• ë‹ˆë©”ì´ì…˜ ì‹¤í–‰í•˜ëŠ” CrossFade í•¨ìˆ˜
+            // ë§¤ê°œë³€ìˆ˜ 1 : ë³€ê²½í•  ì• ë‹ˆë©”ì´ì…˜ í´ë¦½ì˜ ëª…ì¹­
+            // ë§¤ê°œë³€ìˆ˜ 2 : ë‹¤ë¥¸ ì• ë‹ˆë©”ì´ì…˜ í´ë¦½ìœ¼ë¡œ í˜ì´ë“œì•„ì›ƒë˜ëŠ” ì‹œê°„ì„ ì˜ë¯¸
         }
         else if (v <= -0.1f)
         {
-            anim.CrossFade(playerAnim.runB.name, 0.3f);// ÈÄÁø ¾Ö´Ï¸ŞÀÌ¼Ç
+            anim.CrossFade(playerAnim.runB.name, 0.3f);// í›„ì§„ ì• ë‹ˆë©”ì´ì…˜
         }
         else if (h >= 0.1f)
         {
-            anim.CrossFade(playerAnim.runR.name, 0.3f);// ¿À¸¥ÂÊ ÀÌµ¿ ¾Ö´Ï¸ŞÀÌ¼Ç
+            anim.CrossFade(playerAnim.runR.name, 0.3f);// ì˜¤ë¥¸ìª½ ì´ë™ ì• ë‹ˆë©”ì´ì…˜
         }
         else if (h <= -0.1f)
         {
-            anim.CrossFade(playerAnim.runL.name, 0.3f);// ¿ŞÂÊ ÀÌµ¿ ¾Ö´Ï¸ŞÀÌ¼Ç
+            anim.CrossFade(playerAnim.runL.name, 0.3f);// ì™¼ìª½ ì´ë™ ì• ë‹ˆë©”ì´ì…˜
         }
         else
         {
-            anim.CrossFade(playerAnim.idle.name, 0.3f);// Á¤Áö ½Ã Idle ¾Ö´Ï¸ŞÀÌ¼Ç
+            anim.CrossFade(playerAnim.idle.name, 0.3f);// ì •ì§€ ì‹œ Idle ì• ë‹ˆë©”ì´ì…˜
         }
     }
 }

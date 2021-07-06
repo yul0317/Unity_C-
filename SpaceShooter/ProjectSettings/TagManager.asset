@@ -7,6 +7,7 @@ TagManager:
   - Shootable
   - BULLET
   - PLAYER
+  - ENEMY
   layers:
   - Default
   - TransparentFX
@@ -19,8 +20,8 @@ TagManager:
   - Lighting
   - Ground
   - Postprocessing
-  - 
-  - 
+  - BULLET
+  - E_BULLET
   - 
   - 
   - 

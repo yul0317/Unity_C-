@@ -4,32 +4,33 @@ using UnityEngine;
 
 public class RemoveBullet : MonoBehaviour
 {
-    //½ºÆÄÅ© ÇÁ¸®ÆÕÀ» ÀúÀåÇÒ º¯¼ö
+    //ìŠ¤íŒŒí¬ í”„ë¦¬íŒ¹ì„ ì €ì¥í•  ë³€ìˆ˜
     public GameObject sparkEffect;
 
-    //Ãæµ¹ÀÌ ½ÃÀÛÇÒ ¶§ ¹ß»ıÇÏ´Â ÀÌº¥Æ®
+    //ì¶©ëŒì´ ì‹œì‘í•  ë•Œ ë°œìƒí•˜ëŠ” ì´ë²¤íŠ¸
     private void OnCollisionEnter(Collision coll)
     {
-        //Ãæµ¹ÇÑ °ÔÀÓ¿ÀºêÁ§Æ®ÀÇ ÅÂ±×°ª ºñ±³
-        if(coll.collider.tag == "BULLET")
+        //ì¶©ëŒí•œ ê²Œì„ì˜¤ë¸Œì íŠ¸ì˜ íƒœê·¸ê°’ ë¹„êµ
+        if (coll.collider.tag == "BULLET")
         {
-            //½ºÆÄÅ© È¿°ú ÇÔ¼ö È£Ãâ
+            //ìŠ¤íŒŒí¬ íš¨ê³¼ í•¨ìˆ˜ í˜¸ì¶œ
             ShowEffect(coll);
-            //Ãæµ¹ÇÑ °ÔÀÓ¿ÀºêÁ§Æ® »èÁ¦
-            Destroy(coll.gameObject);
+            //ì¶©ëŒí•œ ê²Œì„ì˜¤ë¸Œì íŠ¸ ì‚­ì œ
+            //Destroy(coll.gameObject);
+            coll.gameObject.SetActive(false);
         }
     }
 
     void ShowEffect(Collision coll)
     {
-        //Ãæµ¹ ÁöÁ¡ÀÇ Á¤º¸¸¦ ÃßÃâ
+        //ì¶©ëŒ ì§€ì ì˜ ì •ë³´ë¥¼ ì¶”ì¶œ
         ContactPoint contact = coll.contacts[0];
-        //¹ı¼± º¤ÅÍ°¡ ÀÌ·ç´Â È¸Àü°¢µµ¸¦ ÃßÃâ
+        //ë²•ì„  ë²¡í„°ê°€ ì´ë£¨ëŠ” íšŒì „ê°ë„ë¥¼ ì¶”ì¶œ
         Quaternion rot = Quaternion.FromToRotation(-Vector3.forward, contact.normal);
 
-        //½ºÆÄÅ© È¿°ú¸¦ »ı¼º
-        GameObject spark = Instantiate(sparkEffect, contact.point+(-contact.normal*0.05f), rot);
-        //½ºÆÄÅ© È¿°úÀÇ ºÎ¸ğ¸¦ µå·³Åë ¶Ç´Â º®À¸·Î ¼³Á¤
+        //ìŠ¤íŒŒí¬ íš¨ê³¼ë¥¼ ìƒì„±
+        GameObject spark = Instantiate(sparkEffect, contact.point + (-contact.normal * 0.05f), rot);
+        //ìŠ¤íŒŒí¬ íš¨ê³¼ì˜ ë¶€ëª¨ë¥¼ ë“œëŸ¼í†µ ë˜ëŠ” ë²½ìœ¼ë¡œ ì„¤ì •
         spark.transform.SetParent(this.transform);
     }
 }

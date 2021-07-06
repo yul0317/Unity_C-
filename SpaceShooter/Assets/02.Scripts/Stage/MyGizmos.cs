@@ -4,14 +4,31 @@ using UnityEngine;
 
 public class MyGizmos : MonoBehaviour
 {
+    public enum Type { NORMAL, WAYPOINT }
+    private const string wayPointFile = "Enemy";
+    public Type type = Type.NORMAL;
+
     public Color _color = Color.yellow;
     public float _radius = 0.1f;
 
     private void OnDrawGizmos()
     {
-        //±âÁî¸ğ »ö»ó ¼³Á¤
-        Gizmos.color = _color;
-        //±¸Ã¼ ¸ğ¾çÀÇ ±âÁî¸ğ »ı¼º. ÀÎÀÚ´Â (»ı¼º À§Ä¡, ¹İÁö¸§)
-        Gizmos.DrawSphere(transform.position, _radius);
+        if (type == Type.NORMAL)
+        {
+            //ê¸°ì¦ˆëª¨ ìƒ‰ìƒ ì„¤ì •
+            Gizmos.color = _color;
+            //êµ¬ì²´ ëª¨ì–‘ì˜ ê¸°ì¦ˆëª¨ ìƒì„±. ì¸ìëŠ” (ìƒì„± ìœ„ì¹˜, ë°˜ì§€ë¦„)
+            Gizmos.DrawSphere(transform.position, _radius);
+        }
+        else
+        {
+            //ê¸°ì¦ˆëª¨ ìƒ‰ìƒ ì„¤ì •
+            Gizmos.color = _color;
+            //Enemy ì´ë¯¸ì§€ íŒŒì¼ì„ í‘œì‹œ
+            Gizmos.DrawIcon(transform.position + Vector3.up * 1.0f, wayPointFile, true);
+            Gizmos.DrawWireSphere(transform.position, _radius);
+
+        }
+
     }
 }

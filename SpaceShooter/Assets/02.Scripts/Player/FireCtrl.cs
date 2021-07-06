@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-//ÃÑ¾Ë ¹ß»ç¿Í ÀçÀåÀü ¿Àµğ¿À Å¬¸³À» ÀúÀåÇÒ ±¸Á¶Ã¼
+//ì´ì•Œ ë°œì‚¬ì™€ ì¬ì¥ì „ ì˜¤ë””ì˜¤ í´ë¦½ì„ ì €ì¥í•  êµ¬ì¡°ì²´
 [System.Serializable]
 public struct PlayerSfx
 {
@@ -12,63 +14,137 @@ public struct PlayerSfx
 
 public class FireCtrl : MonoBehaviour
 {
-    //¹«±â Å¸ÀÔ
+    //ë¬´ê¸° íƒ€ì…
     public enum WeaponType
     {
-        RIFLE=0,
+        RIFLE = 0,
         SHOTGUN
     }
-    //ÁÖÀÎ°øÀÌ ÇöÀç µé°í ÀÖ´Â ¹«±â¸¦ ÀúÀåÇÒ º¯¼ö
+    //ì£¼ì¸ê³µì´ í˜„ì¬ ë“¤ê³  ìˆëŠ” ë¬´ê¸°ë¥¼ ì €ì¥í•  ë³€ìˆ˜
     public WeaponType currWeapon = WeaponType.RIFLE;
 
-    //ÃÑ¾Ë ÇÁ¸®¸Ê
+    //ì´ì•Œ í”„ë¦¬ë§µ
     public GameObject bullet;
-    //ÅºÇÇ ÃßÃâ ÆÄÆ¼Å¬
+    //íƒ„í”¼ ì¶”ì¶œ íŒŒí‹°í´
     public ParticleSystem cartridge;
-    //ÃÑ¾Ë ¹ß»ç ÁÂÇ¥
+    //ì´ì•Œ ë°œì‚¬ ì¢Œí‘œ
     public Transform firePos;
-    //ÃÑ±¸ È­¿° ÆÄÆ¼Å¬
+    //ì´êµ¬ í™”ì—¼ íŒŒí‹°í´
     private ParticleSystem muzzleFlash;
 
-    //AudioSource ÄÄÆ÷³ÍÆ®¸¦ ÀúÀåÇÒº¯¼ö
+    //AudioSource ì»´í¬ë„ŒíŠ¸ë¥¼ ì €ì¥í• ë³€ìˆ˜
     private AudioSource _audio;
-    //¿Àµğ¿À Å¬¸³À» ÀúÀåÇÒ º¯¼ö
+    //ì˜¤ë””ì˜¤ í´ë¦½ì„ ì €ì¥í•  ë³€ìˆ˜
     public PlayerSfx playerSfx;
+    //Shake í´ë˜ìŠ¤ë¥¼ ì €ì¥í•  ë³€ìˆ˜
+    private Shake shake;
+
+    //íƒ„ì°½ ì´ë¯¸ì§€ Image UI
+    public Image magazineImg;
+    //ë‚¨ì€ ì´ì•Œ ìˆ˜ Text UI
+    public Text magazineText;
+
+    //ìµœëŒ€ ì´ì•Œ ìˆ˜
+    public int maxBullet = 10;
+    //ë‚¨ì€ ì´ì•Œ ìˆ˜
+    public int remainingBullet = 10;
+
+    //ì¬ì¥ì „ ì‹œê°„
+    public float reloadTime = 2.0f;
+    //ì¬ì¥ì „ ì—¬ë¶€ë¥¼ íŒë‹¨í•  ë³€ìˆ˜
+    private bool isReloading = false;
+
+    //ë³€ê²½í•  ë¬´ê¸° ì´ë¯¸ì§€
+    public Sprite[] weaponIcons;
+    //êµì²´í•  ë¬´ê¸° ì´ë¯¸ì§€ UI
+    public Image weaponImage;
 
     // Start is called before the first frame update
     void Start()
     {
-        //FirePos ÇÏÀ§¿¡ ÀÖ´Â ÄÄÆ÷³ÍÆ® ÃßÃâ
+        //FirePos í•˜ìœ„ì— ìˆëŠ” ì»´í¬ë„ŒíŠ¸ ì¶”ì¶œ
         muzzleFlash = firePos.GetComponentInChildren<ParticleSystem>();
-        //AudioSource ÄÄÆ÷³ÍÆ® ÃßÃâ
+        //AudioSource ì»´í¬ë„ŒíŠ¸ ì¶”ì¶œ
         _audio = GetComponent<AudioSource>();
+        //Shake ìŠ¤í¬ë¦½íŠ¸ë¥¼ ì¶”ì¶œ
+        shake = GameObject.Find("CameraRig").GetComponent<Shake>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        //¸¶¿ì½º ¿ŞÂÊ ¹öÆ°À» Å¬¸¯ÇßÀ» ¶§ Fire ÇÔ¼ö È£Ãâ
-        if (Input.GetMouseButtonDown(0))
+        if (EventSystem.current.IsPointerOverGameObject()) return;
+        //ë§ˆìš°ìŠ¤ ì™¼ìª½ ë²„íŠ¼ì„ í´ë¦­í–ˆì„ ë•Œ Fire í•¨ìˆ˜ í˜¸ì¶œ
+        if (!isReloading && Input.GetMouseButtonDown(0))
         {
+            //ì´ì•Œ ìˆ˜ë¥¼ í•˜ë‚˜ ê°ì†Œ
+            --remainingBullet;
             Fire();
+
+            //ë‚¨ì€ ì´ì•Œì´ ì—†ì„ ê²½ìš° ì¬ì¥ì „ ì½”ë£¨í‹´ í˜¸ì¶œ
+            if (remainingBullet == 0)
+            {
+                StartCoroutine(Reloading());
+            }
         }
     }
     void Fire()
     {
-        //Bullet ÇÁ¸®ÆÕÀ» µ¿ÀûÀ¸·Î »ı¼º
-        Instantiate(bullet, firePos.position, firePos.rotation);
-        //ÆÄÆ¼Å¬ ½ÇÇà
+        //ì…°ì´í¬ íš¨ê³¼ í˜¸ì¶œ
+        StartCoroutine(shake.ShakeCamera());
+        //Bullet í”„ë¦¬íŒ¹ì„ ë™ì ìœ¼ë¡œ ìƒì„±
+        //Instantiate(bullet, firePos.position, firePos.rotation);
+        var _bullet = GameManager.instance.GetBullet();
+        if (_bullet != null)
+        {
+            _bullet.transform.position = firePos.position;
+            _bullet.transform.rotation = firePos.rotation;
+            _bullet.SetActive(true);
+        }
+        //íŒŒí‹°í´ ì‹¤í–‰
         cartridge.Play();
-        //ÃÑ±¸È­¿°ÆÄÆ¼Å¬ ½ÇÇà
+        //ì´êµ¬í™”ì—¼íŒŒí‹°í´ ì‹¤í–‰
         muzzleFlash.Play();
-        //»ç¿îµå ¹ß»ı
+        //ì‚¬ìš´ë“œ ë°œìƒ
         FireSfx();
+        //ì¬ì¥ì „ ì´ë¯¸ì§€ì˜ fillAmount ì†ì„±ê°’ ì§€ì •
+        magazineImg.fillAmount = (float)remainingBullet / (float)maxBullet;
+        //ë‚¨ì€ ì´ì•Œ ìˆ˜ ê°±ì‹ 
+        UpdateBulletText();
     }
     void FireSfx()
     {
-        //ÇöÀç µé°í ÀÖ´Â ¹«±âÀÇ ¿Àµğ¿À Å¬¸³À» °¡Á®¿È
+        //í˜„ì¬ ë“¤ê³  ìˆëŠ” ë¬´ê¸°ì˜ ì˜¤ë””ì˜¤ í´ë¦½ì„ ê°€ì ¸ì˜´
         var _sfx = playerSfx.fire[(int)currWeapon];
-        //»ç¿îµå ¹ß»ı
+        //ì‚¬ìš´ë“œ ë°œìƒ
         _audio.PlayOneShot(_sfx, 1.0f);
+    }
+
+    IEnumerator Reloading()
+    {
+        isReloading = true;
+        _audio.PlayOneShot(playerSfx.reload[(int)currWeapon], 1.0f);
+
+        //ì¬ì¥ì „ ì˜¤ë””ì˜¤ì˜ ê¸¸ì´ + 0.3ì´ˆ ë™ì•ˆ ëŒ€ê¸°
+        yield return new WaitForSeconds(playerSfx.reload[(int)currWeapon].length + 0.3f);
+
+        //ê°ì¢… ë³€ìˆ«ê°’ì˜ ì´ˆê¸°í™”
+        isReloading = false;
+        magazineImg.fillAmount = 1.0f;
+        remainingBullet = maxBullet;
+        //ë‚¨ì€ ì´ì•Œ ìˆ˜ ê°±ì‹ 
+        UpdateBulletText();
+    }
+
+    void UpdateBulletText()
+    {
+        //(ë‚¨ì€ ì´ì•Œ ìˆ˜ / ìµœëŒ€ ì´ì•Œ ìˆ˜)í‘œì‹œ
+        magazineText.text = string.Format("<color=#ff0000>{0}</color>/{1}", remainingBullet, maxBullet);
+    }
+
+    public void OnChangeWeapon()
+    {
+        currWeapon = (WeaponType)((int)++currWeapon % 2);
+        weaponImage.sprite = weaponIcons[(int)currWeapon];
     }
 }
