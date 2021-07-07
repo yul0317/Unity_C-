@@ -22,9 +22,9 @@ TagManager:
   - Postprocessing
   - BULLET
   - E_BULLET
-  - 
-  - 
-  - 
+  - ENEMY
+  - OBSTACLE
+  - PLAYER
   - 
   - 
   - 

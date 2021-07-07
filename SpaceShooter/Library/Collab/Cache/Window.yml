@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &1
+MonoBehaviour:
+  m_ObjectHideFlags: 61
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffe70aba2e7074048aca5de573b64a59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SimpleSelectedItems:
+    m_Keys:
+    - Assets/01.Scenes/Play.unity
+    - Assets/01.Scenes/Play/NavMesh.asset
+    - Assets/02.Scripts/Common/DataManager/GameDataSO.asset
+    - Assets/02.Scripts/Common/FollowCam.cs
+    - Assets/02.Scripts/Editor.meta
+    - Assets/02.Scripts/Editor/FOVEditor.cs
+    - Assets/02.Scripts/Editor/FOVEditor.cs.meta
+    - Assets/02.Scripts/Enemy/EnemyAI.cs
+    - Assets/02.Scripts/Enemy/EnemyFOV.cs
+    - Assets/02.Scripts/Enemy/EnemyFOV.cs.meta
+    - Assets/02.Scripts/Player/FireCtrl.cs
+    - Assets/03.Prefabs/Barrel.prefab
+    - Assets/03.Prefabs/Box.prefab
+    - Assets/03.Prefabs/Box.prefab.meta
+    - Assets/03.Prefabs/Enemy.prefab
+    - Assets/05.Models/Box.meta
+    - Assets/05.Models/Box/Texture.meta
+    - Assets/05.Models/Box/Texture/crate_toltech_Default.mat
+    - Assets/05.Models/Box/Texture/crate_toltech_Default.mat.meta
+    - Assets/05.Models/Box/Texture/m_crates_toltech.psd
+    - Assets/05.Models/Box/Texture/m_crates_toltech.psd.meta
+    - Assets/05.Models/Box/crate_toltech_big.FBX
+    - Assets/05.Models/Box/crate_toltech_big.FBX.meta
+    - Assets/05.Models/Box/crate_toltech_small.FBX
+    - Assets/05.Models/Box/crate_toltech_small.FBX.meta
+    - Assets/05.Models/Box/crate_toltech_tools.FBX
+    - Assets/05.Models/Box/crate_toltech_tools.FBX.meta
+    - Assets/05.Models/Stair.meta
+    - Assets/05.Models/Stair/Stair.FBX
+    - Assets/05.Models/Stair/Stair.FBX.meta
+    - Assets/05.Models/Stair/Textures.meta
+    - Assets/05.Models/Stair/Textures/Materials.meta
+    - Assets/05.Models/Stair/Textures/Materials/Stair.mat
+    - Assets/05.Models/Stair/Textures/Materials/Stair.mat.meta
+    - Assets/05.Models/Stair/Textures/m_mpr_walls.psd
+    - Assets/05.Models/Stair/Textures/m_mpr_walls.psd.meta
+    - ProjectSettings/TagManager.asset
+    - 
+    m_Values: 0000000000000000000000000000000000000000000000000000000000000000000000000000
+  RevisionSummary: 
+  ChangesSearchValue: 
+  SelectedHistoryRevision: 
+  HistoryPageNumber: 0
+  TabIndex: 0
